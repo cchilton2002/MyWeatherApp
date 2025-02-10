@@ -20,8 +20,13 @@ public class WeatherService {
     @Value("${weather.visualcrossing.key}")
     private String apiKey;
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public WeatherService(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+    
     private static final String VISUAL_CROSSING_URL = "https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/";
 
     public JsonNode getWeatherData(String city) {
@@ -57,9 +62,9 @@ public class WeatherService {
 
 
             if (daylight1 > daylight2) {
-                return city1 + " has longer daylight hours.";
+                return city1 + " has longer daylight hours than " + city2 + ".";
             } else if (daylight2 > daylight1) {
-                return city2 + " has longer daylight hours.";
+                return city2 + " has longer daylight hours" + city1 + ".";
             } else {
                 return "Both cities have the same daylight hours.";
             }
@@ -70,8 +75,8 @@ public class WeatherService {
 
     public String rainCheck(String city1, String city2) {
       try {
-          boolean raining1 = isRainingInCity(city1); // Helper method (see below)
-          boolean raining2 = isRainingInCity(city2); // Helper method
+          boolean raining1 = isRainingInCity(city1);
+          boolean raining2 = isRainingInCity(city2); 
   
           if (raining1 && raining2) {
               return "Both " + city1 + " and " + city2 + " are raining.";
@@ -88,7 +93,7 @@ public class WeatherService {
       }
   }
   
-  // Helper method to check rain in a single city (reusing the old logic)
+  // Helper method to check rain in a single city
   private boolean isRainingInCity(String city) {
       try {
           JsonNode data = getWeatherData(city);
