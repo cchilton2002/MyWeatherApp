@@ -1,29 +1,34 @@
 package com.weatherapp.myweatherapp.controller;
 
-import com.weatherapp.myweatherapp.model.CityInfo;
 import com.weatherapp.myweatherapp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController // Use RestController for direct response body
+@RequestMapping("/weather") // Base path for your endpoints
 public class WeatherController {
 
-  @Autowired
-  WeatherService weatherService;
+    @Autowired
+    private WeatherService weatherService;
 
-  @GetMapping("/forecast/{city}")
-  public ResponseEntity<CityInfo> forecastByCity(@PathVariable("city") String city) {
+    @GetMapping("/daylight")
+    public ResponseEntity<String> compareDaylight(@RequestParam String city1, @RequestParam String city2) {
+        try {
+            String result = weatherService.compareDaylightHours(city1, city2);
+            return ResponseEntity.ok(result); // Return 200 OK with the result
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage()); // Return 400 Bad Request with error
+        }
+    }
 
-    CityInfo ci = weatherService.forecastByCity(city);
-
-    return ResponseEntity.ok(ci);
-  }
-
-  // TODO: given two city names, compare the length of the daylight hours and return the city with the longest day
-
-  // TODO: given two city names, check which city its currently raining in
-
+    @GetMapping("/rain")
+    public ResponseEntity<String> rainCheck(@RequestParam String city1, @RequestParam String city2) {
+        try {
+            String result = weatherService.rainCheck(city1, city2); // Call the new method
+            return ResponseEntity.ok(result);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
