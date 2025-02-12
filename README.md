@@ -35,7 +35,7 @@ The application uses the Visual Crossing Weather API to fetch real-time weather 
 - Java 17 or higher
 - Maven 3.6.3 or higher
 - Git (optional, but recommended for version control)
-- A Visual Crossing Weather API key (see [API Key](#api-key) section)
+- A Visual Crossing Weather API key (see [Build and Run](#build-and-run) section)
 
 ## Build and Run
 
