@@ -30,14 +30,14 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetWeatherData_Success() throws Exception {
-        // Mock API response
+        // mock API response
         String mockResponse = "{ \"days\": [ { \"sunrise\": \"06:00:00\", \"sunset\": \"18:00:00\", \"conditions\": \"Rain\" } ] }";
         when(restTemplate.getForObject(anyString(), eq(String.class))).thenReturn(mockResponse);
 
-        // Call the method
+        // call the method
         JsonNode result = weatherService.getWeatherData("London");
 
-        // Verify the result
+        // verify the result
         assertNotNull(result);
         assertEquals("06:00:00", result.findPath("days").get(0).findPath("sunrise").asText());
         assertEquals("Rain", result.findPath("days").get(0).findPath("conditions").asText());
@@ -48,10 +48,10 @@ public class WeatherServiceTest {
 
     @Test
     public void testGetWeatherData_Failure() {
-        // Simulate an exception when calling the API
+        // simulate an exception when calling the API
         when(restTemplate.getForObject(anyString(), eq(String.class))).thenThrow(new RuntimeException("API Error"));
 
-        // Verify that the exception is thrown
+        // verify that the exception is thrown
         Exception exception = assertThrows(RuntimeException.class, () -> {
             weatherService.getWeatherData("London");
         });
@@ -60,46 +60,46 @@ public class WeatherServiceTest {
 
     @Test
     public void testCompareDaylightHours_City1Longer() throws Exception {
-        // Mock API responses for two cities
+        // mock API responses for two cities
         String mockResponse1 = "{ \"days\": [ { \"sunrise\": \"06:00:00\", \"sunset\": \"18:00:00\" } ] }";
         String mockResponse2 = "{ \"days\": [ { \"sunrise\": \"07:00:00\", \"sunset\": \"17:00:00\" } ] }";
         when(restTemplate.getForObject(contains("London"), eq(String.class))).thenReturn(mockResponse1);
         when(restTemplate.getForObject(contains("Paris"), eq(String.class))).thenReturn(mockResponse2);
 
-        // Call the method
+        // call the method
         String result = weatherService.compareDaylightHours("London", "Paris");
 
-        // Verify the result
+        // verify the result
         assertEquals("London has longer daylight hours than Paris.", result);
     }
 
     @Test
     public void testRainCheck_BothRaining() throws Exception {
-        // Mock API responses for two cities
+        // mock API responses for two cities
         String mockResponse1 = "{ \"days\": [ { \"conditions\": \"Rain\" } ] }";
         String mockResponse2 = "{ \"days\": [ { \"conditions\": \"Drizzle\" } ] }";
         when(restTemplate.getForObject(contains("London"), eq(String.class))).thenReturn(mockResponse1);
         when(restTemplate.getForObject(contains("Paris"), eq(String.class))).thenReturn(mockResponse2);
 
-        // Call the method
+        // call the method
         String result = weatherService.rainCheck("London", "Paris");
 
-        // Verify the result
+        // verify the result
         assertEquals("Both London and Paris are raining.", result);
     }
 
     @Test
     public void testRainCheck_NeitherRaining() throws Exception {
-        // Mock API responses for two cities
+        // mock API responses for two cities
         String mockResponse1 = "{ \"days\": [ { \"conditions\": \"Clear\" } ] }";
         String mockResponse2 = "{ \"days\": [ { \"conditions\": \"Sunny\" } ] }";
         when(restTemplate.getForObject(contains("London"), eq(String.class))).thenReturn(mockResponse1);
         when(restTemplate.getForObject(contains("Paris"), eq(String.class))).thenReturn(mockResponse2);
 
-        // Call the method
+        // call the method
         String result = weatherService.rainCheck("London", "Paris");
 
-        // Verify the result
+        // verify the result
         assertEquals("Neither London nor Paris is raining.", result);
     }
 }

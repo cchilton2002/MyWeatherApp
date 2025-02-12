@@ -41,9 +41,11 @@ public class WeatherService {
 
     public String compareDaylightHours(String city1, String city2) {
         try {
+            // getting the data for the two cities
             JsonNode data1 = getWeatherData(city1);
             JsonNode data2 = getWeatherData(city2);
-
+            
+            // getting the sunrise and sunset times
             String sunrise1 = data1.findPath("days").get(0).findPath("sunrise").asText();
             String sunset1 = data1.findPath("days").get(0).findPath("sunset").asText();
             String sunrise2 = data2.findPath("days").get(0).findPath("sunrise").asText();
@@ -56,9 +58,11 @@ public class WeatherService {
             LocalTime startTime2 = LocalTime.parse(sunrise2.substring(0, 8), formatter);
             LocalTime endTime2 = LocalTime.parse(sunset2.substring(0, 8), formatter);
 
+            // calculating the daytime hours
             long daylight1 = ChronoUnit.MINUTES.between(startTime1, endTime1);
             long daylight2 = ChronoUnit.MINUTES.between(startTime2, endTime2);
 
+            // statements based on the daylight hours comparison outcome
             if (daylight1 > daylight2) {
                 return city1 + " has longer daylight hours than " + city2 + ".";
             } else if (daylight2 > daylight1) {
@@ -70,12 +74,29 @@ public class WeatherService {
             throw new RuntimeException("Error comparing daylight hours: " + e.getMessage());
         }
     }
+    
+    // method to check rain in a single city
+    private boolean isRainingInCity(String city) {
+        try {
+            JsonNode data = getWeatherData(city);
+            String conditions = data.findPath("days").get(0).findPath("conditions").asText().toLowerCase();
+            logger.info("Conditions for {}: {}", city, conditions); // log the conditions
+            // return true if the conditions contain the following
+            return conditions.contains("rain") || conditions.contains("drizzle") || conditions.contains("sleet") || conditions.contains("showers");
+        } catch (Exception e) {
+            logger.error("Error checking rain for " + city + ": " + e.getMessage());
+            throw new RuntimeException("Error checking rain for " + city + ": " + e.getMessage());
+            // throw an error if we can't check for rain
+        }
+    }
 
     public String rainCheck(String city1, String city2) {
         try {
+            // return the boolean values for the chosen cities
             boolean raining1 = isRainingInCity(city1);
             boolean raining2 = isRainingInCity(city2);
 
+            // statements for the comparison outcomes
             if (raining1 && raining2) {
                 return "Both " + city1 + " and " + city2 + " are raining.";
             } else if (raining1) {
@@ -88,19 +109,8 @@ public class WeatherService {
         } catch (Exception e) {
             logger.error("Error checking rain: " + e.getMessage());
             throw new RuntimeException("Error checking rain: " + e.getMessage());
+            // throw error if can't check rain
         }
     }
 
-    // Helper method to check rain in a single city
-    private boolean isRainingInCity(String city) {
-        try {
-            JsonNode data = getWeatherData(city);
-            String conditions = data.findPath("days").get(0).findPath("conditions").asText().toLowerCase();
-            logger.info("Conditions for {}: {}", city, conditions);
-            return conditions.contains("rain") || conditions.contains("drizzle") || conditions.contains("sleet") || conditions.contains("showers");
-        } catch (Exception e) {
-            logger.error("Error checking rain for " + city + ": " + e.getMessage());
-            throw new RuntimeException("Error checking rain for " + city + ": " + e.getMessage());
-        }
-    }
 }
