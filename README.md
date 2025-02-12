@@ -16,17 +16,17 @@ A simple Spring Boot application that provides weather information, including co
 
 This application provides the following features through two API endpoints:
 
-Daylight Comparison:
+-   **Daylight Comparison:**
 
-    - Compare the length of daylight hours between two cities.
+    -   Compare the length of daylight hours between two cities.
 
-    - Returns a message indicating which city has longer daylight hours or if they are equal.
+    -   Returns a message indicating which city has longer daylight hours or if they are equal.
 
-Rain Check:
+-   **Rain Check:**
 
-    - Check if it's currently raining in one or two cities.
+    -   Check if it's currently raining in one or two cities.
 
-    - Returns a message indicating the rain status for the specified cities.
+    -   Returns a message indicating the rain status for the specified cities.
 
 The application uses the Visual Crossing Weather API to fetch real-time weather data, including sunrise, sunset, and current weather conditions.
 
