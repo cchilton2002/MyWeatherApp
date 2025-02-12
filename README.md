@@ -90,13 +90,13 @@ To run the unit tests, use the following Maven command:
 mvn test
 ```
 
-**Service Tests**
+-   **Service Tests**
     
-    - Tests successful retrival of weather data for a given city
-    - Also tests the correct error handling when the API call fails
-    - Tests the logic and successful output for comparisons of daylight hours between two cities
+    -   Tests successful retrival of weather data for a given city
+    -   Also tests the correct error handling when the API call fails
+    -   Tests the logic and successful output for comparisons of daylight hours between two cities
 
-**Controller Tests**
+-   **Controller Tests**
 
-    - Tests the success of the two API endpoints for the daylight and rain check comparisons between two cities
-    - Checks the error handling of the two API endpoints 
+    -   Tests the success of the two API endpoints for the daylight and rain check comparisons between two cities
+    -   Checks the error handling of the two API endpoints 
